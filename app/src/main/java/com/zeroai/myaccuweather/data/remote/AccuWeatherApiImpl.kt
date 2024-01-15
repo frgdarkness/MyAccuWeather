@@ -3,6 +3,7 @@ package com.zeroai.myaccuweather.data.remote
 import android.util.Log
 import com.zeroai.myaccuweather.data.remote.model.CityResponse
 import com.zeroai.myaccuweather.data.remote.model.DailyWeatherResponse
+import com.zeroai.myaccuweather.data.remote.model.OneHourForecasts
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.request
@@ -64,6 +65,60 @@ class AccuWeatherApiImpl(
             dailyWeatherResponse = json.decodeFromString(responseData)
             Log.d("asd123", "responseData = $dailyWeatherResponse")
             dailyWeatherResponse
+        } catch (e : Exception) {
+            Log.d("asd123", "gotException: ${e.message}")
+            null
+        }
+    }
+
+    override suspend fun getFiveDayWeather(locationCode: String): DailyWeatherResponse? {
+        return try {
+            val response: HttpResponse = client.request("http://dataservice.accuweather.com/forecasts/v1/daily/5day/$locationCode") {
+                method = HttpMethod.Get
+                url {
+                    parameters.append("apikey", "mvsZHXrLqgTixK4WGFWyexBzHSpcD1mb")
+                    parameters.append("details", "false")
+                    parameters.append("metric", "false")
+                }
+            }
+            val responseData: String = response.body()
+            Log.d("asd123", "responseData = $responseData")
+            var dailyWeatherResponse: DailyWeatherResponse? = null
+            val json = Json {
+                ignoreUnknownKeys = true
+                coerceInputValues = true
+                explicitNulls = false
+            }
+            dailyWeatherResponse = json.decodeFromString(responseData)
+            Log.d("asd123", "responseData = $dailyWeatherResponse")
+            dailyWeatherResponse
+        } catch (e : Exception) {
+            Log.d("asd123", "gotException: ${e.message}")
+            null
+        }
+    }
+
+    override suspend fun getCurrentWeather(locationCode: String): OneHourForecasts? {
+        return try {
+            val response: HttpResponse = client.request("http://dataservice.accuweather.com/forecasts/v1/hourly/1hour/$locationCode") {
+                method = HttpMethod.Get
+                url {
+                    parameters.append("apikey", "mvsZHXrLqgTixK4WGFWyexBzHSpcD1mb")
+                    parameters.append("details", "false")
+                    parameters.append("metric", "false")
+                }
+            }
+            val responseData: String = response.body()
+            Log.d("asd123", "responseData = $responseData")
+            var dailyWeatherResponse: List<OneHourForecasts> = emptyList()
+            val json = Json {
+                ignoreUnknownKeys = true
+                coerceInputValues = true
+                explicitNulls = false
+            }
+            dailyWeatherResponse = json.decodeFromString(responseData)
+            Log.d("asd123", "responseData = $dailyWeatherResponse")
+            dailyWeatherResponse.firstOrNull()
         } catch (e : Exception) {
             Log.d("asd123", "gotException: ${e.message}")
             null

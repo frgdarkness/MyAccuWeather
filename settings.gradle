@@ -14,3 +14,5 @@ dependencyResolutionManagement {
 }
 rootProject.name = "MyAccuWeather"
 include ':app'
+include ':EasyToast'
+include ':AccuWeatherHelper'

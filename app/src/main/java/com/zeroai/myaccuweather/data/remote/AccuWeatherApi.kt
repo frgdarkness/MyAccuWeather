@@ -2,6 +2,7 @@ package com.zeroai.myaccuweather.data.remote
 
 import com.zeroai.myaccuweather.data.remote.model.CityResponse
 import com.zeroai.myaccuweather.data.remote.model.DailyWeatherResponse
+import com.zeroai.myaccuweather.data.remote.model.OneHourForecasts
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.android.Android
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -34,4 +35,8 @@ interface AccuWeatherApi {
     suspend fun getCityInfo(cityName: String): List<CityResponse>
 
     suspend fun getDailyWeather(locationCode: String): DailyWeatherResponse?
+
+    suspend fun getFiveDayWeather(locationCode: String): DailyWeatherResponse?
+
+    suspend fun getCurrentWeather(locationCode: String): OneHourForecasts?
 }
